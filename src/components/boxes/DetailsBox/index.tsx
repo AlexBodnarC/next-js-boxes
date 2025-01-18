@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Box from "@/components/common/Box";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { InfoRow } from "@/components/common/InfoRow";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   owners: { src: string; initials: string }[];
@@ -34,25 +35,35 @@ const DetailsBox = ({
                 ))}
               </div>
             )}
-            <div className={"clickable-text"}>Add</div>
+            <Button className="p-0" variant={"link"}>
+              Add
+            </Button>
           </div>
         </InfoRow>
         <InfoRow label="Status">
           <StatusBadge status={status} />
         </InfoRow>
         <InfoRow label="Data Agreement">
-          <div className={"clickable-text"}>{dataAgreementFileName}</div>
-          <div className={"clickable-text"}>Add</div>
+          <Button className="-ml-1 p-1" variant={"link"}>
+            {dataAgreementFileName}
+          </Button>
+          <Button className="p-1" variant={"link"}>
+            Add
+          </Button>
         </InfoRow>
         <InfoRow label="Next Security review">
           <p className="text-sm">{nextReviewDate}</p>
           <StatusBadge text={"Due soon"} status={"pending"} />
-          <div className={"clickable-text"}>Add</div>
+          <Button className="p-1" variant={"link"}>
+            Add
+          </Button>
         </InfoRow>
         <InfoRow label="Last Security review">
           <p className="text-sm">{lastReviewDate}</p>
           <StatusBadge status={status} />
-          <div className={"clickable-text"}>Add</div>
+          <Button className="p-1" variant={"link"}>
+            Add
+          </Button>
         </InfoRow>
       </div>
     </Box>

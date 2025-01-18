@@ -14,6 +14,7 @@ import Box from "@/components/common/Box";
 import { InfoRow } from "@/components/common/InfoRow";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import SmallCheckmark from "@/components/common/SmallCheckmark";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   name: string;
@@ -59,7 +60,9 @@ const VendorDetailsBox = ({
           label="Website:"
           icon={<PanelTop size={iconSize} />}
         >
-          <p className="text-sm clickable-text">{website}</p>
+          <Button className="-ml-1 p-1" variant={"link"}>
+            {website}
+          </Button>
         </InfoRow>
         <InfoRow
           minWidth={minColumnWidth}
@@ -81,14 +84,18 @@ const VendorDetailsBox = ({
           label="Privacy policy URL"
           icon={<BookKey size={iconSize} />}
         >
-          <p className="clickable-text">{privacyPolicyUrl}</p>
+          <Button className="-ml-1 p-1" variant={"link"}>
+            {privacyPolicyUrl}
+          </Button>
         </InfoRow>
         <InfoRow
           minWidth={minColumnWidth}
           label="Terms of use URL"
           icon={<BookKey size={iconSize} />}
         >
-          <p className="clickable-text">{termsOfUseUrl}</p>
+          <Button className="-ml-1 p-1" variant={"link"}>
+            {termsOfUseUrl}
+          </Button>
         </InfoRow>
         <InfoRow
           minWidth={minColumnWidth}
