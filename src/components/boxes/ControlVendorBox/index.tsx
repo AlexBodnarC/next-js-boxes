@@ -1,6 +1,7 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Box from "@/components/common/Box";
-import { Check, Files, MessageCircle, Plus, UserRound } from "lucide-react";
+import { Files, MessageCircle, Plus, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +26,11 @@ type Control = {
   note: string;
 };
 const ControlVendorBox = ({ controls }: { controls: Control[] }) => {
+  const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({});
+
+  const toggleRowExpansion = (index: number) => {
+    setExpandedRows((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
   return (
     <Box
       title={"Controls link with vendor"}
@@ -35,56 +41,65 @@ const ControlVendorBox = ({ controls }: { controls: Control[] }) => {
         </Button>
       }
     >
-      <div className={"w-full overflow-auto"}>
-        <div className={"min-w-[565px] overflow-x-auto"}>
-          <div className="flex p-5 gap-2 border-b">
-            <div className="flex-1 min-w-[200px] text-sm font-bold">
-              Type/Control
-            </div>
-            <div className="text-sm font-bold min-w-[100px]">Owner(s)</div>
-            <div className="text-sm font-bold min-w-[100px]">Note(s)</div>
-            <div className="text-sm font-bold min-w-[100px]">Progress</div>
-          </div>
-          <div className={"py-5"}>
+      <div className="w-full overflow-auto">
+        <table className="min-w-[565px] w-full border-collapse">
+          <thead className="border-b">
+            <tr>
+              <th className="text-left p-5 text-sm font-bold min-w-[200px]">
+                Type/Control
+              </th>
+              <th className="text-left p-5 text-sm font-bold min-w-[100px]">
+                Owner(s)
+              </th>
+              <th className="text-left p-5 text-sm font-bold min-w-[100px]">
+                Note
+              </th>
+              <th className="text-left p-5 text-sm font-bold min-w-[100px]">
+                Progress
+              </th>
+            </tr>
+          </thead>
+          <tbody>
             {controls.map((control, index) => (
-              <div
-                key={index}
-                className="px-5 flex border-b last:border-b-0 pb-4 mb-4 last:pb-0 last:mb-0 items-center gap-2"
-              >
+              <tr key={index} className="border-b last:border-b-0 align-top">
                 {/* Control Info */}
-                <div className="flex-1">
+                <td className="p-5">
                   <h3 className="font-semibold">{control.type}</h3>
                   <p className="text-sm text-gray-600">{control.description}</p>
                   <div className="flex items-center gap-2 mt-2 flex-wrap">
-                    {control.standards.slice(0, 3).map((standard, idx) => (
+                    {(expandedRows[index]
+                      ? control.standards
+                      : control.standards.slice(0, 3)
+                    ).map((standard, idx) => (
                       <Badge key={idx} variant="secondary">
-                        <p className="truncate">{standard}</p>
+                        {standard}
                       </Badge>
                     ))}
-                    {control.standards.length > 3 && (
-                      <p
-                        className={"clickable-text p-1"}
-                      >{`${control.standards.length - 3}+`}</p>
+                    {control.standards.length > 3 && !expandedRows[index] && (
+                      <Button
+                        variant="link"
+                        className="p-1"
+                        onClick={() => toggleRowExpansion(index)}
+                      >
+                        {`+${control.standards.length - 3}`}
+                      </Button>
                     )}
                   </div>
-                </div>
+                </td>
 
                 {/* Owner Info */}
-                <div className="flex items-center gap-2 min-w-[100px]">
+                <td className="p-5 align-middle">
                   {control.owners.length > 0 ? (
                     <div className="flex -space-x-2">
-                      {control.owners.map((owner, index) => (
-                        <Avatar
-                          className={"w-[30px] h-[30px] border"}
-                          key={index}
-                        >
+                      {control.owners.map((owner, idx) => (
+                        <Avatar className="w-[30px] h-[30px] border" key={idx}>
                           <AvatarImage src={owner.src} alt="avatar" />
                           <AvatarFallback>{owner.initials}</AvatarFallback>
                         </Avatar>
                       ))}
                     </div>
                   ) : (
-                    <div className={"flex items-center gap-1"}>
+                    <div className="flex items-center gap-1">
                       <Avatar
                         className={"w-[30px] h-[30px] border border-dashed"}
                         key={index}
@@ -96,25 +111,25 @@ const ControlVendorBox = ({ controls }: { controls: Control[] }) => {
                       <span className="text-sm text-gray-400">Unassigned</span>
                     </div>
                   )}
-                </div>
-                <div className="flex items-center gap-2 min-w-[100px]">
+                </td>
+
+                {/* Note */}
+                <td className="p-5 align-middle">
                   {control.note && <MessageCircle />}
-                </div>
+                </td>
 
                 {/* Progress Info */}
-                <div className="flex items-center gap-2 min-w-[100px]">
-                  <div className="flex flex-col items-center">
-                    <CircularProgress
-                      completed={control.progress.completed}
-                      total={control.progress.total}
-                    />
-                  </div>
-                </div>
-              </div>
+                <td className="p-5 align-middle">
+                  <CircularProgress
+                    completed={control.progress.completed}
+                    total={control.progress.total}
+                  />
+                </td>
+              </tr>
             ))}
-          </div>
-        </div>
-      </div>
+          </tbody>
+        </table>
+      </div>{" "}
     </Box>
   );
 };
